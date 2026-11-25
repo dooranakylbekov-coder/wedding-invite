@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="ky" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Нурсейит & Сезимгүл — Үйлөнүү тойго чакыруу</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts with Cyrillic Support (for ө, ү, ң) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Cormorant+Infant:ital,wght@0,500;0,600;1,500;1,600;1,700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        burgundy: '#5D0E12',
+                        burgundyDark: '#42070A',
+                        burgundyLight: '#7A161B',
+                        champagne: '#E5D3B3',
+                        goldWax: '#D4AF37',
+                        ivory: '#FAF8F5'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        script: ['"Great Vibes"', '"Alex Brush"', '"Cormorant Infant"', 'cursive'],
+                        italicSerif: ['"Cormorant Infant"', 'Georgia', 'serif'],
+                        sans: ['"Cormorant Garamond"', 'Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Realistic Envelope Flaps */
+        .envelope-flap-top {
+            clip-path: polygon(0 0, 100% 0, 50% 54%);
+            background: linear-gradient(180deg, #4E0A0E 0%, #681116 100%);
+            filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.55));
+            transition: transform 1.1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.9s ease;
+            transform-origin: top center;
+            pointer-events: none;
+        }
+        .envelope-flap-left {
+            clip-path: polygon(0 0, 52% 50%, 0 100%);
+            background: linear-gradient(90deg, #46080B 0%, #5B0D11 100%);
+            filter: drop-shadow(4px 0 12px rgba(0, 0, 0, 0.45));
+            pointer-events: none;
+        }
+        .envelope-flap-right {
+            clip-path: polygon(100% 0, 48% 50%, 100% 100%);
+            background: linear-gradient(270deg, #46080B 0%, #5B0D11 100%);
+            filter: drop-shadow(-4px 0 12px rgba(0, 0, 0, 0.45));
+            pointer-events: none;
+        }
+        .envelope-flap-bottom {
+            clip-path: polygon(0 100%, 50% 45%, 100% 100%);
+            background: linear-gradient(0deg, #48080B 0%, #631014 100%);
+            filter: drop-shadow(0 -8px 18px rgba(0, 0, 0, 0.5));
+            pointer-events: none;
+        }
+
+        /* Envelope Opening States */
+        #envelopeOverlay.opened .envelope-flap-top {
+            transform: rotateX(180deg);
+        }
+        #envelopeOverlay.opened {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-28px) scale(1.03);
+        }
+
+        /* Realistic 3D Gold/Champagne Wax Seal */
+        .wax-seal {
+            background: radial-gradient(circle at 32% 28%, #F7EAD2 0%, #DFC397 38%, #B5925B 78%, #8F6D39 100%);
+            box-shadow:
+                0 12px 28px rgba(0, 0, 0, 0.65),
+                inset 0 3px 6px rgba(255, 255, 255, 0.75),
+                inset 0 -4px 8px rgba(92, 65, 25, 0.6);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
+            z-index: 50;
+            cursor: pointer;
+            pointer-events: auto;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .wax-seal:hover {
+            transform: scale(1.05);
+        }
+        .wax-seal:active {
+            transform: scale(0.95);
+        }
+
+        /* Pulse Ring Around Wax Seal */
+        @keyframes sealPulse {
+            0% { transform: scale(0.96); opacity: 0.75; }
+            70% { transform: scale(1.16); opacity: 0; }
+            100% { transform: scale(1.16); opacity: 0; }
+        }
+        .seal-ring {
+            animation: sealPulse 2.4s infinite ease-out;
+            pointer-events: none;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.85s ease-out, transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Burgundy Square Checkbox */
+        .burgundy-checkbox:checked + .custom-box {
+            background-color: #5D0E12;
+            border-color: #5D0E12;
+        }
+        .burgundy-checkbox:checked + .custom-box svg {
+            opacity: 1;
+        }
+
+        /* Music Equalizer Bars */
+        @keyframes eqWave {
+            0%, 100% { height: 5px; }
+            50% { height: 16px; }
+        }
+        .eq-bar {
+            width: 2.5px;
+            background-color: #FFFFFF;
+            border-radius: 999px;
+        }
+        .music-active .eq-bar:nth-child(1) { animation: eqWave 0.75s infinite ease-in-out; }
+        .music-active .eq-bar:nth-child(2) { animation: eqWave 0.55s infinite ease-in-out 0.18s; }
+        .music-active .eq-bar:nth-child(3) { animation: eqWave 0.85s infinite ease-in-out 0.32s; }
+        .music-active .eq-bar:nth-child(4) { animation: eqWave 0.65s infinite ease-in-out 0.1s; }
+    </style>
+</head>
+<body class="bg-stone-100 text-burgundy font-serif antialiased selection:bg-burgundy selection:text-white">
+
+    <!-- Local MP3 Audio Support (place 'jax-bugun-ozgocho-kun.mp3' next to index.html on hosting) -->
+    <audio id="weddingAudio" src="jax-bugun-ozgocho-kun.mp3" loop preload="auto"></audio>
+
+    <!-- ================= FLOATING MUSIC CONTROL BUTTON ================= -->
+    <button id="musicControlBtn" type="button" aria-label="Музыканы башкаруу"
+        class="fixed top-4 right-4 z-40 hidden items-center gap-2 bg-burgundy/95 backdrop-blur-md text-white border border-champagne/60 px-3.5 py-2 rounded-full shadow-xl hover:bg-burgundyDark transition-all active:scale-95 cursor-pointer max-w-[92vw]">
+        <div id="eqBars" class="flex items-end gap-0.5 h-4 shrink-0 pointer-events-none">
+            <span class="eq-bar h-2"></span>
+            <span class="eq-bar h-3.5"></span>
+            <span class="eq-bar h-2.5"></span>
+            <span class="eq-bar h-3"></span>
+        </div>
+        <span id="musicStatusText" class="font-serif text-xs tracking-wide font-medium text-champagne truncate pointer-events-none">♪ Jax — Бүгүн өзгөчө күн</span>
+    </button>
+
+    <!-- ================= SECTION 1: INTERACTIVE ENVELOPE COVER ================= -->
+    <div id="envelopeOverlay"
+        class="fixed inset-0 z-50 max-w-md mx-auto bg-burgundyDark flex flex-col justify-between overflow-hidden transition-all duration-1000 ease-in-out shadow-2xl">
+        
+        <!-- 3D Envelope Triangular Flaps -->
+        <div class="envelope-flap-left absolute inset-0 pointer-events-none"></div>
+        <div class="envelope-flap-right absolute inset-0 pointer-events-none"></div>
+        <div class="envelope-flap-bottom absolute inset-0 pointer-events-none"></div>
+        <div class="envelope-flap-top absolute inset-0 pointer-events-none"></div>
+
+        <!-- Top Header on Envelope -->
+        <div class="relative z-10 pt-12 px-4 text-center select-none pointer-events-none">
+            <p class="font-serif text-white text-2xl sm:text-3xl tracking-[0.14em] uppercase font-normal drop-shadow">
+                ҮЙЛӨНҮҮ ТОЙГО
+            </p>
+            <h1 class="font-script text-white text-6xl sm:text-7xl -mt-3 sm:-mt-4 drop-shadow-md font-normal">
+                Чакыруу
+            </h1>
+        </div>
+
+        <!-- Center Interactive Wax Seal Button ("БАСЫҢЫЗ") -->
+        <div class="relative z-50 flex flex-col items-center justify-center my-auto pointer-events-auto">
+            <div class="relative flex items-center justify-center pointer-events-auto">
+                <!-- Animated Outer Pulse Ring -->
+                <span class="seal-ring absolute w-36 h-36 rounded-full border-2 border-champagne/60 pointer-events-none"></span>
+
+                <button id="openEnvelopeBtn" type="button" onclick="window.handleOpenEnvelope && window.handleOpenEnvelope(event)" aria-label="Конвертти ачуу"
+                    style="z-index: 50; cursor: pointer; pointer-events: auto;"
+                    class="wax-seal relative z-50 w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center cursor-pointer pointer-events-auto focus:outline-none">
+                    <!-- Wavy Wax Rim SVG -->
+                    <svg class="absolute inset-0 w-full h-full text-[#C7A36B] opacity-70 pointer-events-none" viewBox="0 0 140 140" fill="none">
+                        <path d="M70 4 C80 3, 88 9, 98 11 C108 13, 118 19, 124 28 C130 37, 136 47, 136 58 C136 69, 138 80, 133 90 C128 100, 125 111, 116 118 C107 125, 97 133, 86 135 C75 137, 64 138, 53 135 C42 132, 31 127, 23 118 C15 109, 9 99, 6 88 C3 77, 3 65, 6 54 C9 43, 13 32, 22 24 C31 16, 41 10, 52 7 C59 5, 64 4, 70 4 Z"
+                            stroke="#8A6836" stroke-width="2" class="pointer-events-none"/>
+                        <circle cx="70" cy="70" r="52" stroke="#8A6836" stroke-width="1.3" class="pointer-events-none"/>
+                        <circle cx="70" cy="70" r="47" stroke="#FFF8EB" stroke-width="0.9" stroke-dasharray="2 2" class="pointer-events-none"/>
+                    </svg>
+                    <span class="relative z-10 font-serif font-bold text-burgundy text-sm sm:text-base tracking-[0.14em] uppercase drop-shadow-[0_1px_0_rgba(255,255,255,0.6)] pointer-events-none select-none">
+                        БАСЫҢЫЗ
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Royal Crest / Shield with Crown & Monogram "Н & С" -->
+        <div class="relative z-10 pb-8 px-4 flex flex-col items-center justify-end select-none pointer-events-none">
+            <div class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center pointer-events-none">
+                <!-- Ornate White Floral Shield & Crown SVG -->
+                <svg class="w-full h-full text-white/95 drop-shadow pointer-events-none" viewBox="0 0 260 270" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Crown on Top -->
+                    <path d="M108 32 L113 16 L122 25 L130 12 L138 25 L147 16 L152 32 Z" stroke-width="1.8"/>
+                    <line x1="108" y1="36" x2="152" y2="36" stroke-width="1.8"/>
+                    <circle cx="113" cy="13" r="1.8" fill="currentColor"/>
+                    <circle cx="130" cy="9" r="2" fill="currentColor"/>
+                    <circle cx="147" cy="13" r="1.8" fill="currentColor"/>
+
+                    <!-- Inner & Outer Shield Crest Frame -->
+                    <path d="M130 48 C144 48, 152 58, 166 58 C182 58, 196 52, 204 64 C210 74, 204 94, 204 128 C204 176, 178 214, 130 242 C82 214, 56 176, 56 128 C56 94, 50 74, 56 64 C64 52, 78 58, 94 58 C108 58, 116 48, 130 48 Z" stroke-width="1.6"/>
+                    <path d="M130 56 C142 56, 149 65, 163 65 C177 65, 189 60, 196 70 C201 78, 196 96, 196 127 C196 171, 172 206, 130 232 C88 206, 64 171, 64 127 C64 96, 59 78, 64 70 C71 60, 83 65, 97 65 C111 65, 118 56, 130 56 Z" stroke-width="0.9" stroke-opacity="0.75"/>
+
+                    <!-- Delicate Botanical Leaves Left & Right -->
+                    <path d="M54 95 Q42 90 38 80 M53 115 Q40 112 35 102 M54 135 Q40 135 36 125 M58 156 Q44 158 40 148 M66 176 Q52 180 48 170 M80 196 Q68 203 63 194" stroke-width="1.2"/>
+                    <path d="M206 95 Q218 90 222 80 M207 115 Q220 112 225 102 M206 135 Q220 135 224 125 M202 156 Q216 158 220 148 M194 176 Q208 180 212 170 M180 196 Q192 203 197 194" stroke-width="1.2"/>
+                </svg>
+
+                <!-- Calligraphic Monogram "Н & С" Inside Shield -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center pt-6 pointer-events-none">
+                <span class="font-script text-white text-6xl sm:text-7xl leading-none -ml-8 drop-shadow">Н</span>
+                <span class="font-script text-white/55 text-4xl sm:text-5xl leading-none -my-3">&amp;</span>
+                <span class="font-script text-white text-6xl sm:text-7xl leading-none ml-8 drop-shadow">С</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= MAIN INVITATION PAGE (MOBILE-FIRST) ================= -->
+    <main class="max-w-md mx-auto min-h-screen bg-white shadow-2xl relative overflow-x-hidden">
+
+        <!-- ================= SECTION 2: HERO ORNAMENTAL ARCH CARD ================= -->
+        <section class="pt-10 pb-8 px-5 flex justify-center">
+            <!-- Scalloped / Lobed Burgundy Frame SVG Container -->
+            <div class="relative w-full max-w-[340px] mx-auto">
+                <svg class="w-full h-auto drop-shadow-xl" viewBox="0 0 360 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Outer Cream/Gold Trim -->
+                    <path d="M180 10
+                             C228 10, 266 44, 272 90
+                             C308 100, 330 134, 326 174
+                             C322 220, 324 275, 344 320
+                             C324 365, 322 420, 326 466
+                             C330 506, 308 540, 272 550
+                             C266 596, 228 630, 180 630
+                             C132 630, 94 596, 88 550
+                             C52 540, 30 506, 34 466
+                             C38 420, 36 365, 16 320
+                             C36 275, 38 220, 34 174
+                             C30 134, 52 100, 88 90
+                             C94 44, 132 10, 180 10 Z"
+                          fill="#FAF6EE" stroke="#DFC9A6" stroke-width="2"/>
+
+                    <!-- Inner Deep Burgundy Arch -->
+                    <path d="M180 19
+                             C223 19, 258 50, 264 94
+                             C297 104, 318 135, 314 173
+                             C310 218, 312 274, 332 320
+                             C312 366, 310 422, 314 467
+                             C318 505, 297 536, 264 546
+                             C258 590, 223 621, 180 621
+                             C137 621, 102 590, 96 546
+                             C63 536, 42 505, 46 467
+                             C50 422, 48 366, 28 320
+                             C48 274, 50 218, 46 173
+                             C42 135, 63 104, 96 94
+                             C102 50, 137 19, 180 19 Z"
+                          fill="#5D0E12" stroke="#E8D7B9" stroke-width="1.5"/>
+                </svg>
+
+                <!-- Content Overlay Inside the Burgundy Arch -->
+                <div class="absolute inset-0 flex flex-col items-center justify-between py-9 px-8 text-center text-white">
+                    
+                    <!-- Realistic White Rose Wedding Bouquet Illustration -->
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center drop-shadow-md">
+                        <svg viewBox="0 0 140 140" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <radialGradient id="roseGrad1" cx="40%" cy="35%" r="65%">
+                                    <stop offset="0%" stop-color="#FFFFFF"/>
+                                    <stop offset="65%" stop-color="#F6F1E7"/>
+                                    <stop offset="100%" stop-color="#DFD3BE"/>
+                                </radialGradient>
+                                <radialGradient id="roseGrad2" cx="45%" cy="40%" r="60%">
+                                    <stop offset="0%" stop-color="#FFFDF9"/>
+                                    <stop offset="70%" stop-color="#EFE7D6"/>
+                                    <stop offset="100%" stop-color="#D4C4A8"/>
+                                </radialGradient>
+                            </defs>
+                            <!-- Soft Green Foliage Backdrop -->
+                            <g fill="#4F6D4E" opacity="0.85">
+                                <ellipse cx="32" cy="54" rx="14" ry="7" transform="rotate(-35 32 54)"/>
+                                <ellipse cx="108" cy="54" rx="14" ry="7" transform="rotate(35 108 54)"/>
+                                <ellipse cx="30" cy="86" rx="14" ry="7" transform="rotate(25 30 86)"/>
+                                <ellipse cx="110" cy="86" rx="14" ry="7" transform="rotate(-25 110 86)"/>
+                                <ellipse cx="70" cy="24" rx="13" ry="6"/>
+                                <ellipse cx="70" cy="116" rx="13" ry="6"/>
+                            </g>
+                            <!-- Outer Ring of White Roses -->
+                            <g stroke="#CBB99B" stroke-width="0.9">
+                                <circle cx="70" cy="36" r="17" fill="url(#roseGrad2)"/>
+                                <circle cx="99" cy="48" r="17" fill="url(#roseGrad1)"/>
+                                <circle cx="105" cy="78" r="17" fill="url(#roseGrad2)"/>
+                                <circle cx="88" cy="103" r="17" fill="url(#roseGrad1)"/>
+                                <circle cx="52" cy="103" r="17" fill="url(#roseGrad2)"/>
+                                <circle cx="35" cy="78" r="17" fill="url(#roseGrad1)"/>
+                                <circle cx="41" cy="48" r="17" fill="url(#roseGrad2)"/>
+                            </g>
+                            <!-- Inner Ring of White Roses -->
+                            <g stroke="#C5B190" stroke-width="1">
+                                <circle cx="70" cy="54" r="18" fill="url(#roseGrad1)"/>
+                                <circle cx="88" cy="69" r="18" fill="url(#roseGrad2)"/>
+                                <circle cx="79" cy="89" r="18" fill="url(#roseGrad1)"/>
+                                <circle cx="59" cy="88" r="18" fill="url(#roseGrad2)"/>
+                                <circle cx="52" cy="68" r="18" fill="url(#roseGrad1)"/>
+                                <!-- Center Focal Rose -->
+                                <circle cx="70" cy="71" r="20" fill="url(#roseGrad1)"/>
+                            </g>
+                            <!-- Delicate Rose Petal Swirls -->
+                            <g fill="none" stroke="#BFA986" stroke-width="1.1" stroke-linecap="round">
+                                <path d="M64 68 C67 63, 75 64, 75 70 C75 76, 66 78, 62 72 C58 65, 67 56, 77 60"/>
+                                <path d="M65 51 C69 47, 75 49, 74 54 C73 59, 65 59, 63 54"/>
+                                <path d="M84 66 C88 62, 94 64, 93 69 C92 74, 84 74, 82 69"/>
+                                <path d="M75 86 C79 82, 85 84, 84 89 C83 94, 75 94, 73 89"/>
+                                <path d="M55 85 C59 81, 65 83, 64 88 C63 93, 55 93, 53 88"/>
+                                <path d="M48 65 C52 61, 58 63, 57 68 C56 73, 48 73, 46 68"/>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <!-- Calligraphic Couple Names -->
+                    <div class="my-1 select-none">
+                        <h2 class="font-script text-4xl sm:text-5xl text-white leading-tight drop-shadow">
+                            Нурсейит
+                        </h2>
+                        <div class="font-script text-3xl text-white/80 -my-1">&amp;</div>
+                        <h2 class="font-script text-4xl sm:text-5xl text-white leading-tight drop-shadow">
+                            Сезимгүл
+                        </h2>
+                    </div>
+
+                    <!-- Subtitle -->
+                    <p class="font-serif text-sm sm:text-base text-white/95 leading-snug max-w-[220px]">
+                        Бакытка толгон күндү биз менен бирге бөлүшүңүз!
+                    </p>
+
+                    <!-- Vertical Date Display: 12 • 12 • 26 -->
+                    <div class="flex flex-col items-center justify-center font-serif text-white leading-none pt-1">
+                        <span class="text-4xl sm:text-5xl font-normal tracking-wider">12</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-white my-2"></span>
+                        <span class="text-4xl sm:text-5xl font-normal tracking-wider">12</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-white my-2"></span>
+                        <span class="text-4xl sm:text-5xl font-normal tracking-wider">26</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 3: INVITATION TEXT & DECEMBER 2026 CALENDAR ================= -->
+        <section class="reveal px-6 py-8 text-center">
+            <h2 class="font-script text-4xl sm:text-5xl text-burgundy mb-6">
+                Кымбаттуу коноктор!
+            </h2>
+
+            <p class="font-serif text-lg sm:text-xl leading-relaxed tracking-wide uppercase text-burgundy max-w-sm mx-auto">
+                СИЗДИ БАЛДАРЫБЫЗ
+                <span class="underline decoration-burgundy decoration-1 underline-offset-4 font-semibold">НУРСЕЙИТ</span>
+                МЕНЕН
+                <span class="underline decoration-burgundy decoration-1 underline-offset-4 font-semibold">СЕЗИМГҮЛДҮН</span>
+                ҮЙЛӨНҮҮ ТОЮНА АРНАЛГАН САЛТАНАТТУУ КЕЧЕГЕ КЕЛИП, КАДЫРЛУУ КОНОГУБУЗ БОЛУП КЕТҮҮГӨ ЧАКЫРАБЫЗ!
+            </p>
+
+            <!-- Calligraphic Month Title -->
+            <h3 class="font-script text-5xl sm:text-6xl text-burgundy mt-9 mb-5">
+                Декабрь
+            </h3>
+
+            <!-- Accurate Week Strip Around Saturday, December 12, 2026 -->
+            <div class="max-w-xs mx-auto">
+                <div class="grid grid-cols-7 text-center font-serif text-base sm:text-lg text-burgundy mb-2">
+                    <span>Дш</span>
+                    <span>Ше</span>
+                    <span>Ша</span>
+                    <span>Бш</span>
+                    <span>Жм</span>
+                    <span>Иш</span>
+                    <span>Жк</span>
+                </div>
+                <div class="grid grid-cols-7 items-center text-center font-serif text-lg sm:text-xl text-burgundy">
+                    <span>07</span>
+                    <span>08</span>
+                    <span>09</span>
+                    <span>10</span>
+                    <span>11</span>
+                    <!-- Saturday 12th Highlighted in Burgundy Heart -->
+                    <div class="relative flex items-center justify-center">
+                        <svg class="w-11 h-11 text-burgundy drop-shadow-sm" viewBox="0 0 36 34" fill="currentColor">
+                            <path d="M18 31.5C18 31.5 3 21.6 3 10.8C3 5.8 6.9 2 11.6 2C14.4 2 16.9 3.4 18 5.6C19.1 3.4 21.6 2 24.4 2C29.1 2 33 5.8 33 10.8C33 21.6 18 31.5 18 31.5Z"/>
+                        </svg>
+                        <span class="absolute text-white text-base font-semibold pb-0.5">12</span>
+                    </div>
+                    <span>13</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 4: VENUE & TIME ("Дареги | убактысы:") ================= -->
+        <section class="reveal px-6 py-8 text-center">
+            <h2 class="font-script text-4xl sm:text-5xl text-burgundy mb-6">
+                Дареги | убактысы:
+            </h2>
+
+            <!-- Architectural Line-Art Illustration of Grand Classical Banquet Hall -->
+            <div class="max-w-[310px] mx-auto mb-5">
+                <svg viewBox="0 0 420 175" class="w-full h-auto text-burgundy" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Roof Balustrade & Central Crest -->
+                    <line x1="28" y1="34" x2="392" y2="34"/>
+                    <line x1="24" y1="42" x2="396" y2="42"/>
+                    <path d="M185 34 L195 22 L210 16 L225 22 L235 34" stroke-width="1.4"/>
+                    <circle cx="210" cy="12" r="2.5"/>
+                    <!-- Baluster ticks -->
+                    <path d="M40 34v8 M55 34v8 M70 34v8 M85 34v8 M100 34v8 M115 34v8 M130 34v8 M145 34v8 M160 34v8 M175 34v8 M245 34v8 M260 34v8 M275 34v8 M290 34v8 M305 34v8 M320 34v8 M335 34v8 M350 34v8 M365 34v8 M380 34v8" stroke-width="0.9"/>
+
+                    <!-- Main Building Facade Outline -->
+                    <rect x="30" y="42" width="360" height="114"/>
+                    <!-- Central Risalit / Portico Projection -->
+                    <rect x="155" y="42" width="110" height="114"/>
+                    <!-- Horizontal Cornices -->
+                    <line x1="30" y1="80" x2="390" y2="80"/>
+                    <line x1="30" y1="118" x2="390" y2="118"/>
+
+                    <!-- Left Wing Windows (3 floors x 4 windows) -->
+                    <g stroke-width="1">
+                        <!-- Floor 3 -->
+                        <rect x="44" y="50" width="16" height="22"/><line x1="52" y1="50" x2="52" y2="72"/><line x1="44" y1="61" x2="60" y2="61"/>
+                        <rect x="72" y="50" width="16" height="22"/><line x1="80" y1="50" x2="80" y2="72"/><line x1="72" y1="61" x2="88" y2="61"/>
+                        <rect x="100" y="50" width="16" height="22"/><line x1="108" y1="50" x2="108" y2="72"/><line x1="100" y1="61" x2="116" y2="61"/>
+                        <rect x="128" y="50" width="16" height="22"/><line x1="136" y1="50" x2="136" y2="72"/><line x1="128" y1="61" x2="144" y2="61"/>
+                        <!-- Floor 2 -->
+                        <rect x="44" y="88" width="16" height="22"/><line x1="52" y1="88" x2="52" y2="110"/><line x1="44" y1="99" x2="60" y2="99"/>
+                        <rect x="72" y="88" width="16" height="22"/><line x1="80" y1="88" x2="80" y2="110"/><line x1="72" y1="99" x2="88" y2="99"/>
+                        <rect x="100" y="88" width="16" height="22"/><line x1="108" y1="88" x2="108" y2="110"/><line x1="100" y1="99" x2="116" y2="99"/>
+                        <rect x="128" y="88" width="16" height="22"/><line x1="136" y1="88" x2="136" y2="110"/><line x1="128" y1="99" x2="144" y2="99"/>
+                        <!-- Floor 1 -->
+                        <rect x="44" y="126" width="16" height="22"/><line x1="52" y1="126" x2="52" y2="148"/>
+                        <rect x="72" y="126" width="16" height="22"/><line x1="80" y1="126" x2="80" y2="148"/>
+                        <rect x="100" y="126" width="16" height="22"/><line x1="108" y1="126" x2="108" y2="148"/>
+                        <rect x="128" y="126" width="16" height="22"/><line x1="136" y1="126" x2="136" y2="148"/>
+                    </g>
+
+                    <!-- Right Wing Windows (3 floors x 4 windows) -->
+                    <g stroke-width="1">
+                        <!-- Floor 3 -->
+                        <rect x="276" y="50" width="16" height="22"/><line x1="284" y1="50" x2="284" y2="72"/><line x1="276" y1="61" x2="292" y2="61"/>
+                        <rect x="304" y="50" width="16" height="22"/><line x1="312" y1="50" x2="312" y2="72"/><line x1="304" y1="61" x2="320" y2="61"/>
+                        <rect x="332" y="50" width="16" height="22"/><line x1="340" y1="50" x2="340" y2="72"/><line x1="332" y1="61" x2="348" y2="61"/>
+                        <rect x="360" y="50" width="16" height="22"/><line x1="368" y1="50" x2="368" y2="72"/><line x1="360" y1="61" x2="376" y2="61"/>
+                        <!-- Floor 2 -->
+                        <rect x="276" y="88" width="16" height="22"/><line x1="284" y1="88" x2="284" y2="110"/><line x1="276" y1="99" x2="292" y2="99"/>
+                        <rect x="304" y="88" width="16" height="22"/><line x1="312" y1="88" x2="312" y2="110"/><line x1="304" y1="99" x2="320" y2="99"/>
+                        <rect x="332" y="88" width="16" height="22"/><line x1="340" y1="88" x2="340" y2="110"/><line x1="332" y1="99" x2="348" y2="99"/>
+                        <rect x="360" y="88" width="16" height="22"/><line x1="368" y1="88" x2="368" y2="110"/><line x1="360" y1="99" x2="376" y2="99"/>
+                        <!-- Floor 1 -->
+                        <rect x="276" y="126" width="16" height="22"/><line x1="284" y1="126" x2="284" y2="148"/>
+                        <rect x="304" y="126" width="16" height="22"/><line x1="312" y1="126" x2="312" y2="148"/>
+                        <rect x="332" y="126" width="16" height="22"/><line x1="340" y1="126" x2="340" y2="148"/>
+                        <rect x="360" y="126" width="16" height="22"/><line x1="368" y1="126" x2="368" y2="148"/>
+                    </g>
+
+                    <!-- Center Portico Windows & Grand Entrance -->
+                    <rect x="172" y="50" width="16" height="22"/>
+                    <rect x="202" y="50" width="16" height="22"/>
+                    <rect x="232" y="50" width="16" height="22"/>
+
+                    <rect x="172" y="88" width="16" height="22"/>
+                    <rect x="202" y="88" width="16" height="22"/>
+                    <rect x="232" y="88" width="16" height="22"/>
+
+                    <!-- Grand Arched Entrance Door -->
+                    <path d="M198 156 V134 C198 127, 222 127, 222 134 V156" stroke-width="1.4"/>
+                    <line x1="210" y1="129" x2="210" y2="156"/>
+
+                    <!-- Ground & Iron Fence Line -->
+                    <line x1="16" y1="156" x2="404" y2="156" stroke-width="1.5"/>
+                    <line x1="20" y1="162" x2="400" y2="162" stroke-width="0.9"/>
+                </svg>
+            </div>
+
+            <p class="font-serif text-2xl sm:text-3xl text-burgundy tracking-wider mb-1">
+                17:00
+            </p>
+            <p class="font-serif text-xl sm:text-2xl text-burgundy mb-2">
+                Учкун айылы
+            </p>
+            <h3 class="font-serif text-4xl sm:text-5xl text-burgundy tracking-wide uppercase font-normal">
+                “БИШКЕК”
+            </h3>
+            <p class="font-serif text-2xl sm:text-3xl text-burgundy tracking-[0.14em] uppercase mt-1 mb-6">
+                РЕСТОРАНЫ
+            </p>
+
+            <!-- Map/2GIS Action Icon -->
+            <div class="flex items-center justify-center">
+                <!-- Folded Map with Pin Button -->
+                <button id="openMapModalBtn" type="button" aria-label="Картадан көрүү"
+                    class="group flex flex-col items-center gap-1 text-burgundy hover:opacity-75 transition active:scale-95 cursor-pointer">
+                    <svg class="w-12 h-12" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Folded Map Base -->
+                        <path d="M6 34 L16 29 L32 35 L42 30 V41 L32 45 L16 39 L6 44 Z"/>
+                        <line x1="16" y1="29" x2="16" y2="39"/>
+                        <line x1="32" y1="35" x2="32" y2="45"/>
+                        <!-- Location Pin -->
+                        <path d="M24 31 C24 31 15 22.5 15 15.5 C15 10.5 19 6.5 24 6.5 C29 6.5 33 10.5 33 15.5 C33 22.5 24 31 24 31 Z" fill="#FFFFFF"/>
+                        <circle cx="24" cy="15.5" r="3.2"/>
+                    </svg>
+                    <span class="font-serif text-xs uppercase tracking-widest text-burgundy/80">Карта</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 5: LIVE COUNTDOWN ("Той-кечеге чейин:") ================= -->
+        <section class="reveal px-6 py-8 text-center">
+            <h2 class="font-script text-4xl sm:text-5xl text-burgundy mb-6">
+                Той-кечеге чейин:
+            </h2>
+
+            <div class="grid grid-cols-4 gap-2 max-w-xs mx-auto">
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 sm:w-18 sm:h-18 rounded-full border border-burgundy flex items-center justify-center font-serif text-2xl sm:text-3xl text-burgundy">
+                        <span id="cd-days">00</span>
+                    </div>
+                    <span class="font-serif text-sm text-burgundy mt-1.5">Күн</span>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 sm:w-18 sm:h-18 rounded-full border border-burgundy flex items-center justify-center font-serif text-2xl sm:text-3xl text-burgundy">
+                        <span id="cd-hours">00</span>
+                    </div>
+                    <span class="font-serif text-sm text-burgundy mt-1.5">Саат</span>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 sm:w-18 sm:h-18 rounded-full border border-burgundy flex items-center justify-center font-serif text-2xl sm:text-3xl text-burgundy">
+                        <span id="cd-minutes">00</span>
+                    </div>
+                    <span class="font-serif text-sm text-burgundy mt-1.5">Мүнөт</span>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 sm:w-18 sm:h-18 rounded-full border border-burgundy flex items-center justify-center font-serif text-2xl sm:text-3xl text-burgundy">
+                        <span id="cd-seconds">00</span>
+                    </div>
+                    <span class="font-serif text-sm text-burgundy mt-1.5">Секунда</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 6: WEDDING TIMELINE ("Тайминг:") ================= -->
+        <section class="reveal py-8 relative">
+            <h2 class="font-script text-5xl sm:text-6xl text-burgundy text-center mb-6 px-6">
+                Тайминг:
+            </h2>
+
+            <!-- Flowing S-Curved Timeline Container -->
+            <div class="relative w-full max-w-md mx-auto min-h-[600px]">
+                <!-- Background S-Curve SVG Path with Burgundy Heart -->
+                <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 390 620" fill="none" preserveAspectRatio="none">
+                    <path d="M -5 18
+                             C 190 48, 265 115, 225 162
+                             C 185 208, 105 230, 122 280
+                             C 138 330, 262 365, 238 425
+                             C 215 480, 95 495, 132 548
+                             C 162 590, 290 600, 395 615"
+                          stroke="#5D0E12" stroke-width="2" stroke-linecap="round"/>
+                    <!-- Burgundy Heart Accent on Curve -->
+                    <g transform="translate(216, 412)">
+                        <path d="M16 28C16 28 2 19 2 9.5C2 5 5.5 1.5 9.8 1.5C12.4 1.5 14.8 2.8 16 4.8C17.2 2.8 19.6 1.5 22.2 1.5C26.5 1.5 30 5 30 9.5C30 19 16 28 16 28Z" fill="#5D0E12"/>
+                    </g>
+                </svg>
+
+                <!-- Event 1: 16:00 КОНОКТОР ЖЫЙЫН (Left Side) -->
+                <div class="relative z-10 flex items-center justify-start pl-10 pt-8">
+                    <div class="text-left">
+                        <div class="flex items-end gap-2">
+                            <!-- Two Clinking Champagne Glasses with Ribbons SVG -->
+                            <svg class="w-12 h-14 text-burgundy" viewBox="0 0 64 72" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                                <!-- Left Glass -->
+                                <g transform="rotate(-10 24 36)">
+                                    <path d="M14 12 H28 L26 32 C25.5 37, 16.5 37, 16 32 Z"/>
+                                    <line x1="15" y1="20" x2="27" y2="20" stroke-dasharray="2 1"/>
+                                    <line x1="21" y1="36" x2="21" y2="58"/>
+                                    <line x1="14" y1="58" x2="28" y2="58"/>
+                                    <!-- Bow -->
+                                    <path d="M21 44 C16 41, 15 47, 21 45 C27 47, 26 41, 21 44"/>
+                                    <path d="M21 45 L17 52 M21 45 L25 52"/>
+                                </g>
+                                <!-- Right Glass -->
+                                <g transform="rotate(10 42 36)">
+                                    <path d="M36 12 H50 L48 32 C47.5 37, 38.5 37, 38 32 Z"/>
+                                    <line x1="37" y1="20" x2="49" y2="20" stroke-dasharray="2 1"/>
+                                    <line x1="43" y1="36" x2="43" y2="58"/>
+                                    <line x1="36" y1="58" x2="50" y2="58"/>
+                                    <!-- Bow -->
+                                    <path d="M43 44 C38 41, 37 47, 43 45 C49 47, 48 41, 43 44"/>
+                                    <path d="M43 45 L39 52 M43 45 L47 52"/>
+                                </g>
+                            </svg>
+                            <span class="font-serif text-2xl sm:text-3xl text-burgundy">16:00</span>
+                        </div>
+                        <p class="font-serif text-base sm:text-lg tracking-wider uppercase text-burgundy mt-1">
+                            КОНОКТОР<br>ЖЫЙЫН
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Event 2: 16:30 БАШТАЙЫШЫ (Right Side) -->
+                <div class="relative z-10 flex items-center justify-end pr-9 pt-10">
+                    <div class="text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="font-serif text-2xl sm:text-3xl text-burgundy">16:30</span>
+                            <!-- Interlocking Wedding Rings SVG -->
+                            <svg class="w-16 h-12 text-burgundy" viewBox="0 0 80 54" fill="none" stroke="currentColor" stroke-width="1.4">
+                                <ellipse cx="28" cy="30" rx="16" ry="12" transform="rotate(-12 28 30)"/>
+                                <ellipse cx="28" cy="30" rx="13" ry="9" transform="rotate(-12 28 30)"/>
+                                <ellipse cx="50" cy="26" rx="16" ry="12" transform="rotate(24 50 26)"/>
+                                <ellipse cx="50" cy="26" rx="13" ry="9" transform="rotate(24 50 26)"/>
+                            </svg>
+                        </div>
+                        <p class="font-serif text-base sm:text-lg tracking-wider uppercase text-burgundy mt-1">
+                            БАШТАЙЫШЫ
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Event 3: 17:00 БАНКЕТ (Left Side) -->
+                <div class="relative z-10 flex items-center justify-start pl-12 pt-10">
+                    <div class="text-center">
+                        <div class="flex items-end gap-2">
+                            <!-- Plate, Fork & Knife SVG -->
+                            <svg class="w-14 h-14 text-burgundy" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                                <!-- Fork -->
+                                <path d="M10 14 V24 C10 27, 14 27, 14 24 V14 M12 14 V50"/>
+                                <!-- Plate -->
+                                <circle cx="32" cy="32" r="15"/>
+                                <circle cx="32" cy="32" r="10.5"/>
+                                <!-- Knife -->
+                                <path d="M52 14 C55 18, 55 28, 52 32 V50 M52 14 V32"/>
+                            </svg>
+                            <span class="font-serif text-2xl sm:text-3xl text-burgundy">17:00</span>
+                        </div>
+                        <p class="font-serif text-base sm:text-lg tracking-wider uppercase text-burgundy mt-1">
+                            БАНКЕТ
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Event 4: 21:00 ТОРТ (Right Side) -->
+                <div class="relative z-10 flex items-center justify-end pr-8 pt-8">
+                    <div class="text-center">
+                        <div class="flex items-end gap-2">
+                            <span class="font-serif text-2xl sm:text-3xl text-burgundy pb-2">21:00</span>
+                            <!-- Tiered Floral Wedding Cake SVG -->
+                            <svg class="w-20 h-24 text-burgundy" viewBox="0 0 84 96" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                                <!-- Cake Stand -->
+                                <ellipse cx="42" cy="86" rx="34" ry="5"/>
+                                <!-- Bottom Tier -->
+                                <path d="M14 64 H70 V84 H14 Z"/>
+                                <!-- Middle Tier -->
+                                <path d="M21 44 H63 V64 H21 Z"/>
+                                <!-- Top Tier -->
+                                <path d="M28 26 H56 V44 H28 Z"/>
+                                <!-- Top Roses -->
+                                <circle cx="36" cy="21" r="5"/>
+                                <circle cx="44" cy="19" r="6"/>
+                                <circle cx="51" cy="22" r="4.5"/>
+                                <!-- Floral Cascade -->
+                                <circle cx="31" cy="38" r="4"/>
+                                <circle cx="37" cy="42" r="4.5"/>
+                                <circle cx="34" cy="54" r="5"/>
+                                <circle cx="27" cy="60" r="4"/>
+                                <circle cx="33" cy="72" r="5"/>
+                                <circle cx="26" cy="78" r="4"/>
+                                <!-- Leaves -->
+                                <path d="M24 34 L19 31 M58 36 L63 33 M20 56 L15 54 M19 74 L14 72"/>
+                            </svg>
+                        </div>
+                        <p class="font-serif text-base sm:text-lg tracking-wider uppercase text-burgundy -mt-1">
+                            ТОРТ
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Event 5: 22:00 ТОЙДУН СОҢУ (Bottom Center-Right) -->
+                <div class="relative z-10 flex items-center justify-center pl-10 pt-8 pb-4">
+                    <div class="flex items-center gap-4">
+                        <!-- Floral Wedding Arch SVG -->
+                        <svg class="w-20 h-24 text-burgundy" viewBox="0 0 84 96" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+                            <!-- Left & Right Pillars -->
+                            <rect x="14" y="20" width="6" height="68"/>
+                            <rect x="64" y="20" width="6" height="68"/>
+                            <!-- Top Beam -->
+                            <line x1="10" y1="20" x2="74" y2="20" stroke-width="1.6"/>
+                            <!-- Draped Fabric Curtains -->
+                            <path d="M20 20 Q42 36 64 20"/>
+                            <path d="M20 22 Q28 52 20 84"/>
+                            <path d="M64 22 Q56 52 64 84"/>
+                            <!-- Floral Clusters on Corners -->
+                            <circle cx="17" cy="20" r="5" fill="#FFFFFF"/>
+                            <circle cx="23" cy="17" r="4" fill="#FFFFFF"/>
+                            <circle cx="67" cy="20" r="5" fill="#FFFFFF"/>
+                            <circle cx="61" cy="17" r="4" fill="#FFFFFF"/>
+                            <circle cx="16" cy="34" r="3.5" fill="#FFFFFF"/>
+                            <circle cx="68" cy="34" r="3.5" fill="#FFFFFF"/>
+                        </svg>
+
+                        <div class="text-left">
+                            <span class="block font-serif text-2xl sm:text-3xl text-burgundy">22:00</span>
+                            <p class="font-serif text-base sm:text-lg tracking-wider uppercase text-burgundy mt-1">
+                                ТОЙДУН СОҢУ
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 7: DRESS CODE ("Дресс-код:") ================= -->
+        <section class="reveal px-6 py-8 text-center">
+            <h2 class="font-script text-5xl sm:text-6xl text-burgundy mb-4">
+                Дресс-код:
+            </h2>
+
+            <p class="font-serif text-lg sm:text-xl text-burgundy leading-relaxed max-w-xs mx-auto mb-7">
+                мырзаларга — классический костюм,<br>
+                айымдарга — жарашыктуу көйнөк же<br>
+                ыңгайлуу кийим.
+            </p>
+
+            <!-- Burgundy Tuxedo & Evening Gown Silhouettes Side-by-Side -->
+            <div class="flex items-end justify-center gap-14 max-w-xs mx-auto">
+                <!-- Men's Classic Burgundy Suit with Tie SVG -->
+                <svg class="w-24 h-28 text-burgundy" viewBox="0 0 100 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- White Shirt Collar -->
+                    <polygon points="35,12 50,24 41,34 31,20" fill="#E6E4E2" stroke="#5D0E12" stroke-width="1.2"/>
+                    <polygon points="65,12 50,24 59,34 69,20" fill="#E6E4E2" stroke="#5D0E12" stroke-width="1.2"/>
+                    <polygon points="36,16 64,16 50,74" fill="#F2F0EE"/>
+                    <!-- Burgundy Tie -->
+                    <polygon points="46,23 54,23 52,30 48,30" fill="#5D0E12"/>
+                    <polygon points="48,30 52,30 55,66 50,76 45,66" fill="#5D0E12"/>
+                    <!-- Burgundy Suit Jacket Lapels -->
+                    <path d="M35 12 L14 24 L50 105 L44 48 L30 38 L37 31 Z" fill="#5D0E12"/>
+                    <path d="M65 12 L86 24 L50 105 L56 48 L70 38 L63 31 Z" fill="#5D0E12"/>
+                </svg>
+
+                <!-- Women's Elegant Burgundy Evening Gown SVG -->
+            <svg class="w-20 h-32 text-burgundy" viewBox="0 0 80 130" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M31 8 C33 8, 34 14, 34 19 C37 21, 43 21, 46 19 C46 14, 47 8, 49 8 C51 8, 52 15, 51 24 C50 32, 47 39, 47 45 C47 52, 51 64, 52 78 C53 94, 57 110, 63 121 C56 124, 48 125, 40 125 C32 125, 24 124, 17 121 C23 110, 27 94, 28 78 C29 64, 33 52, 33 45 C33 39, 30 32, 29 24 C28 15, 29 8, 31 8 Z"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ================= SECTION 8: GUEST RSVP FORM ("Конок анкетасы:") ================= -->
+    <section class="reveal px-6 py-8">
+        <h2 class="font-script text-5xl sm:text-6xl text-burgundy text-center mb-6">
+            Конок анкетасы:
+        </h2>
+
+            <form id="rsvpForm" class="max-w-xs mx-auto space-y-5">
+                <div>
+                    <label for="guestNameInput" class="block font-serif text-lg text-burgundy mb-2">
+                        Сиздин атыңыз:
+                    </label>
+                    <input type="text" id="guestNameInput" placeholder="аты"
+                        class="w-full px-5 py-3 rounded-full border border-burgundy text-burgundy placeholder-burgundy/40 font-serif text-lg focus:outline-none focus:ring-2 focus:ring-burgundy/25 transition">
+                </div>
+
+                <div>
+                    <p class="font-serif text-lg text-burgundy mb-3">
+                        Тойго катыша аласызбы?
+                    </p>
+
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="radio" name="rsvpChoice" value="yes" checked class="burgundy-checkbox sr-only">
+                            <span class="custom-box w-5 h-5 border border-burgundy flex items-center justify-center transition">
+                                <svg class="w-3.5 h-3.5 text-white opacity-0 transition" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="4 10 8 14 16 6"/>
+                                </svg>
+                            </span>
+                            <span class="font-serif text-base sm:text-lg text-burgundy">Албете, катышам</span>
+                        </label>
+
+                        <label class="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="radio" name="rsvpChoice" value="no" class="burgundy-checkbox sr-only">
+                            <span class="custom-box w-5 h-5 border border-burgundy flex items-center justify-center transition">
+                                <svg class="w-3.5 h-3.5 text-white opacity-0 transition" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="4 10 8 14 16 6"/>
+                                </svg>
+                            </span>
+                            <span class="font-serif text-base sm:text-lg text-burgundy">Тилекке каршы, катыша албайм</span>
+                        </label>
+                    </div>
+                </div>
+
+                <p id="rsvpErrorMsg" class="hidden text-center font-serif text-sm text-red-700">
+                    Сураныч, атыңызды жазыңыз.
+                </p>
+
+                <div class="pt-2 text-center">
+                    <button type="submit"
+                        class="px-12 py-3.5 rounded-full bg-burgundy hover:bg-burgundyDark text-white font-serif text-lg tracking-widest uppercase shadow-md transition active:scale-95 cursor-pointer">
+                        ЖИБЕРҮҮ
+                    </button>
+                </div>
+            </form>
+
+            <!-- Confirmation Box After Submitting RSVP -->
+            <div id="rsvpSuccessBox" class="hidden max-w-xs mx-auto text-center py-6 px-4 rounded-2xl border border-burgundy/30 bg-ivory">
+                <p id="rsvpSuccessMessage" class="font-serif text-xl text-burgundy leading-relaxed mb-3"></p>
+                <button id="rsvpEditBtn" type="button" class="font-serif text-sm underline text-burgundy/75 hover:text-burgundy">
+                    Кайра өзгөртүү
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 10: HOSTS OPEN ENVELOPE CARD ("УРМАТТОО МЕНЕН, Сүйөр, Назгүл") ================= -->
+        <section class="reveal px-6 py-10 flex justify-center">
+            <div class="relative w-full max-w-[320px] pt-10">
+                <!-- Back Top Flap of Open Envelope -->
+                <div class="w-full h-24 bg-burgundyDark mx-auto"
+                     style="clip-path: polygon(50% 0%, 100% 100%, 0% 100%);"></div>
+
+                <!-- Textured Ivory Card Emerging from Envelope -->
+                <div class="relative z-10 -mt-14 mx-4 bg-[#F7F5F2] border border-stone-200 shadow-md pt-7 pb-20 px-4 text-center">
+                    <p class="font-serif text-lg sm:text-xl tracking-widest uppercase text-burgundy mb-2">
+                        УРМАТТОО МЕНЕН,
+                    </p>
+                    <h3 class="font-script text-4xl sm:text-5xl text-burgundy leading-tight">
+                        Сүйөр &amp; Назгүл
+                    </h3>
+                </div>
+
+                <!-- Front Envelope Pocket & Gold Ornamental Bottom Flap -->
+                <div class="relative z-20 -mt-16 w-full h-40 bg-burgundy shadow-xl overflow-hidden">
+                    <!-- Side Pocket Shadows -->
+                    <div class="absolute inset-0 bg-burgundyDark/60" style="clip-path: polygon(0 0, 50% 55%, 0 100%);"></div>
+                    <div class="absolute inset-0 bg-burgundyDark/60" style="clip-path: polygon(100% 0, 50% 55%, 100% 100%);"></div>
+                    <!-- Bottom Flap -->
+                    <div class="absolute inset-0 bg-burgundy flex flex-col items-center justify-end pb-4 px-6"
+                         style="clip-path: polygon(0 100%, 50% 34%, 100% 100%); filter: drop-shadow(0 -4px 8px rgba(0,0,0,0.45));">
+                        <!-- Gold Filigree Ornament SVG -->
+                        <svg class="w-48 h-16 text-goldWax" viewBox="0 0 220 75" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                            <!-- Central Crown/Fleur-de-lis Scroll -->
+                            <path d="M110 12 C106 20, 102 26, 110 34 C118 26, 114 20, 110 12 Z" fill="currentColor" fill-opacity="0.35"/>
+                            <path d="M110 34 C96 20, 74 22, 68 34 C64 42, 76 48, 84 40 C90 34, 82 28, 76 32"/>
+                            <path d="M110 34 C124 20, 146 22, 152 34 C156 42, 144 48, 136 40 C130 34, 138 28, 144 32"/>
+                            <path d="M68 36 C54 34, 42 40, 38 48 C35 54, 44 56, 48 50"/>
+                            <path d="M152 36 C166 34, 178 40, 182 48 C185 54, 176 56, 172 50"/>
+                            <!-- Bottom Gold Rule with Center Motif -->
+                            <line x1="18" y1="62" x2="96" y2="62"/>
+                            <line x1="124" y1="62" x2="202" y2="62"/>
+                            <circle cx="110" cy="62" r="3" fill="currentColor"/>
+                            <circle cx="102" cy="62" r="1.5" fill="currentColor"/>
+                            <circle cx="118" cy="62" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 11: FOOTER WITH YOUR WHATSAPP CONTACT (+996500610022) ================= -->
+        <footer class="reveal px-6 pt-12 pb-12 text-center bg-white">
+            <p class="font-serif text-base sm:text-lg text-burgundy leading-relaxed mb-7">
+                Хотите такое сайт-приглашение?<br>
+                Напишите нам!
+            </p>
+
+            <div class="flex items-center justify-center max-w-xs mx-auto mb-8">
+                <!-- WhatsApp Contact with User's Number +996 500 61 00 22 & Name Дооранбек -->
+                <a href="https://wa.me/996500610022" target="_blank" rel="noopener noreferrer"
+                   class="flex flex-col items-center gap-1.5 group">
+                    <span class="w-12 h-12 rounded-full bg-burgundy text-white flex items-center justify-center shadow-md group-hover:bg-burgundyDark transition active:scale-95 mb-0.5">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                            <path d="M9.5 9.5c.5 2 2.5 4 4.5 4.5l1.5-1.5 2 1v2c-3 .5-7.5-3-8.5-6.5h2l1 2-1.5 1.5"/>
+                        </svg>
+                    </span>
+                    <span class="font-serif text-base text-burgundy font-medium tracking-wide">+996 500 61 00 22</span>
+                    <span class="font-serif text-lg text-burgundy font-medium mt-0.5">Дооранбек</span>
+                </a>
+            </div>
+
+            <p class="font-serif text-xs sm:text-sm text-burgundy/80">
+                © 2026 | Все права защищены.
+            </p>
+        </footer>
+    </main>
+
+    <!-- ================= MAP / NAVIGATION MODAL ================= -->
+    <div id="mapModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-xs rounded-2xl p-6 border border-burgundy/30 shadow-2xl text-center relative">
+            <button id="closeMapModalBtn" type="button" aria-label="Жабуу"
+                class="absolute top-3 right-3 w-8 h-8 rounded-full text-burgundy hover:bg-burgundy/10 flex items-center justify-center">
+                ✕
+            </button>
+            <h4 class="font-script text-4xl text-burgundy mb-1">“БИШКЕК” РЕСТОРАНЫ</h4>
+            <p class="font-serif text-base text-burgundy/80 mb-5">Учкун айылы • 17:00</p>
+
+            <div class="space-y-3">
+                <a href="https://2gis.kg/bishkek/search/%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA%20%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD%D1%8B%20%D0%A3%D1%87%D0%BA%D1%83%D0%BD"
+                   target="_blank" rel="noopener noreferrer"
+                   class="block w-full py-3 rounded-full bg-burgundy text-white font-serif text-base tracking-wider uppercase hover:bg-burgundyDark transition">
+                    2GIS аркылуу ачуу
+                </a>
+                <a href="https://www.google.com/maps/search/?api=1&query=%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA+%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD%D1%8B+%D0%A3%D1%87%D0%BA%D1%83%D0%BD"
+                   target="_blank" rel="noopener noreferrer"
+                   class="block w-full py-3 rounded-full border border-burgundy text-burgundy font-serif text-base tracking-wider uppercase hover:bg-burgundy/5 transition">
+                    Google Maps ачуу
+                </a>
+                <button id="copyAddrBtn" type="button"
+                    class="w-full pt-1 font-serif text-sm underline text-burgundy/75 hover:text-burgundy">
+                    Даректи көчүрүү
+                </button>
+                <p id="copyToast" class="hidden font-serif text-xs text-emerald-700">Дарек көчүрүлдү!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // ================= 1. DUAL-MODE WEDDING AUDIO: JAX (02.14) — "БҮГҮН ӨЗГӨЧӨ КҮН" =================
+            // Mode A: Plays local MP3 'jax-bugun-ozgocho-kun.mp3' when hosted alongside index.html
+            // Mode B: Fallback Web Audio API modern Kyrgyz pop-ballad synth inspired by the chorus (~102 BPM)
+            const weddingAudioEl = document.getElementById('weddingAudio');
+            let useHtmlAudio = false;
+            let audioCtx = null;
+            let isPlaying = false;
+            let loopTimer = null;
+            let stepIndex = 0;
+
+            // 102 BPM -> eighth-note step = ~294 ms; warm romantic pop progression (Am7 - Fmaj7 - C - G)
+            const STEP_SEC = 0.294;
+            const jaxChorusPattern = [
+                // Bar 1: Am7 — "Бү-гүн өз-гө-чө күн..."
+                { chord: [220.00, 261.63, 329.63, 392.00], bass: 110.00, lead: 523.25, hat: false, kick: true },
+                { chord: null, bass: null, lead: 587.33, hat: true, kick: false },
+                { chord: null, bass: null, lead: 659.25, hat: false, kick: false },
+                { chord: [220.00, 261.63, 329.63], bass: 110.00, lead: 659.25, hat: true, kick: true },
+                { chord: null, bass: null, lead: 587.33, hat: false, kick: false },
+                { chord: null, bass: null, lead: 523.25, hat: true, kick: false },
+                { chord: [220.00, 261.63, 329.63], bass: 110.00, lead: 659.25, hat: false, kick: true },
+                { chord: null, bass: null, lead: null, hat: true, kick: false },
+
+                // Bar 2: Fmaj7 — "...биз э-көө-бүз ү-чүн"
+                { chord: [174.61, 220.00, 261.63, 329.63], bass: 87.31, lead: 523.25, hat: false, kick: true },
+                { chord: null, bass: null, lead: 587.33, hat: true, kick: false },
+                { chord: null, bass: null, lead: 659.25, hat: false, kick: false },
+                { chord: [174.61, 220.00, 261.63], bass: 87.31, lead: 783.99, hat: true, kick: true },
+                { chord: null, bass: null, lead: 659.25, hat: false, kick: false },
+                { chord: null, bass: null, lead: 587.33, hat: true, kick: false },
+                { chord: [174.61, 220.00, 261.63], bass: 87.31, lead: 523.25, hat: false, kick: true },
+                { chord: null, bass: null, lead: null, hat: true, kick: false },
+
+                // Bar 3: Cmaj7 — Melodic lift
+                { chord: [261.63, 329.63, 392.00, 493.88], bass: 130.81, lead: 659.25, hat: false, kick: true },
+                { chord: null, bass: null, lead: 783.99, hat: true, kick: false },
+                { chord: null, bass: null, lead: 880.00, hat: false, kick: false },
+                { chord: [261.63, 329.63, 392.00], bass: 130.81, lead: 783.99, hat: true, kick: true },
+                { chord: null, bass: null, lead: 659.25, hat: false, kick: false },
+                { chord: null, bass: null, lead: 587.33, hat: true, kick: false },
+                { chord: [261.63, 329.63, 392.00], bass: 130.81, lead: 659.25, hat: false, kick: true },
+                { chord: null, bass: null, lead: null, hat: true, kick: false },
+
+                // Bar 4: G6 — Warm cadence back to chorus
+                { chord: [196.00, 246.94, 293.66, 329.63], bass: 98.00, lead: 587.33, hat: false, kick: true },
+                { chord: null, bass: null, lead: 659.25, hat: true, kick: false },
+                { chord: null, bass: null, lead: 587.33, hat: false, kick: false },
+                { chord: [196.00, 246.94, 293.66], bass: 98.00, lead: 493.88, hat: true, kick: true },
+                { chord: null, bass: null, lead: 523.25, hat: false, kick: false },
+                { chord: null, bass: null, lead: 587.33, hat: true, kick: false },
+                { chord: [196.00, 246.94, 293.66], bass: 98.00, lead: 493.88, hat: false, kick: true },
+                { chord: null, bass: null, lead: null, hat: true, kick: false }
+            ];
+
+            function playElectricPianoChords(freqs, duration) {
+                try {
+                    if (!audioCtx || !isPlaying || !freqs) return;
+                    const now = audioCtx.currentTime;
+                    freqs.forEach(function (freq) {
+                        const osc1 = audioCtx.createOscillator();
+                        const osc2 = audioCtx.createOscillator();
+                        const filter = audioCtx.createBiquadFilter();
+                        const gain = audioCtx.createGain();
+
+                        osc1.type = 'sine';
+                        osc2.type = 'triangle';
+                        osc1.frequency.setValueAtTime(freq, now);
+                        osc2.frequency.setValueAtTime(freq * 2, now);
+
+                        const harmonic = audioCtx.createGain();
+                        harmonic.gain.setValueAtTime(0.14, now);
+                        osc2.connect(harmonic);
+
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(1400, now);
+                        filter.frequency.exponentialRampToValueAtTime(480, now + duration);
+
+                        gain.gain.setValueAtTime(0.0001, now);
+                        gain.gain.linearRampToValueAtTime(0.032, now + 0.03);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+                        osc1.connect(filter);
+                        harmonic.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(audioCtx.destination);
+
+                        osc1.start(now);
+                        osc2.start(now);
+                        osc1.stop(now + duration + 0.05);
+                        osc2.stop(now + duration + 0.05);
+                    });
+                } catch (e) {}
+            }
+
+            function playLeadMelody(freq, duration) {
+                try {
+                    if (!audioCtx || !isPlaying || !freq) return;
+                    const now = audioCtx.currentTime;
+                    const osc = audioCtx.createOscillator();
+                    const filter = audioCtx.createBiquadFilter();
+                    const gain = audioCtx.createGain();
+
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now);
+
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(1900, now);
+
+                    gain.gain.setValueAtTime(0.0001, now);
+                    gain.gain.linearRampToValueAtTime(0.075, now + 0.025);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.25);
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + duration + 0.3);
+                } catch (e) {}
+            }
+
+            function playSoftBassAndPulse(bassFreq, hasKick, hasHat) {
+                try {
+                    if (!audioCtx || !isPlaying) return;
+                    const now = audioCtx.currentTime;
+
+                    if (bassFreq) {
+                        const bassOsc = audioCtx.createOscillator();
+                        const bassGain = audioCtx.createGain();
+                        bassOsc.type = 'sine';
+                        bassOsc.frequency.setValueAtTime(bassFreq, now);
+                        bassGain.gain.setValueAtTime(0.0001, now);
+                        bassGain.gain.linearRampToValueAtTime(0.09, now + 0.03);
+                        bassGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
+                        bassOsc.connect(bassGain);
+                        bassGain.connect(audioCtx.destination);
+                        bassOsc.start(now);
+                        bassOsc.stop(now + 0.8);
+                    }
+
+                    if (hasKick) {
+                        const kickOsc = audioCtx.createOscillator();
+                        const kickGain = audioCtx.createGain();
+                        kickOsc.type = 'sine';
+                        kickOsc.frequency.setValueAtTime(115, now);
+                        kickOsc.frequency.exponentialRampToValueAtTime(42, now + 0.14);
+                        kickGain.gain.setValueAtTime(0.07, now);
+                        kickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+                        kickOsc.connect(kickGain);
+                        kickGain.connect(audioCtx.destination);
+                        kickOsc.start(now);
+                        kickOsc.stop(now + 0.18);
+                    }
+
+                    if (hasHat) {
+                        const hatOsc = audioCtx.createOscillator();
+                        const hatFilter = audioCtx.createBiquadFilter();
+                        const hatGain = audioCtx.createGain();
+                        hatOsc.type = 'square';
+                        hatOsc.frequency.setValueAtTime(6200, now);
+                        hatFilter.type = 'highpass';
+                        hatFilter.frequency.setValueAtTime(5000, now);
+                        hatGain.gain.setValueAtTime(0.008, now);
+                        hatGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+                        hatOsc.connect(hatFilter);
+                        hatFilter.connect(hatGain);
+                        hatGain.connect(audioCtx.destination);
+                        hatOsc.start(now);
+                        hatOsc.stop(now + 0.05);
+                    }
+                } catch (e) {}
+            }
+
+            function scheduleNextStep() {
+                if (!isPlaying || useHtmlAudio) return;
+                const step = jaxChorusPattern[stepIndex % jaxChorusPattern.length];
+                if (step.chord) playElectricPianoChords(step.chord, STEP_SEC * 2.8);
+                if (step.lead) playLeadMelody(step.lead, STEP_SEC * 1.4);
+                playSoftBassAndPulse(step.bass, step.kick, step.hat);
+                stepIndex++;
+                loopTimer = setTimeout(scheduleNextStep, STEP_SEC * 1000);
+            }
+
+            function updateMusicUI(playing) {
+                const eqBars = document.getElementById('eqBars');
+                const musicStatusText = document.getElementById('musicStatusText');
+                if (!eqBars || !musicStatusText) return;
+                if (playing) {
+                    eqBars.classList.add('music-active');
+                    musicStatusText.textContent = '♪ Jax — Бүгүн өзгөчө күн';
+                } else {
+                    eqBars.classList.remove('music-active');
+                    musicStatusText.textContent = 'Музыка өчүк';
+                }
+            }
+
+            function startSynthFallback() {
+                try {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioContextClass) return;
+                    if (!audioCtx) {
+                        audioCtx = new AudioContextClass();
+                    }
+                    if (audioCtx.state === 'suspended') {
+                        audioCtx.resume().catch(function () {});
+                    }
+                    if (!isPlaying) {
+                        isPlaying = true;
+                        updateMusicUI(true);
+                        scheduleNextStep();
+                    }
+                } catch (err) {}
+            }
+
+            function startMusicSafely() {
+                try {
+                    if (weddingAudioEl) {
+                        const playPromise = weddingAudioEl.play();
+                        if (playPromise && typeof playPromise.then === 'function') {
+                            playPromise.then(function () {
+                                useHtmlAudio = true;
+                                isPlaying = true;
+                                updateMusicUI(true);
+                            }).catch(function () {
+                                useHtmlAudio = false;
+                                startSynthFallback();
+                            });
+                            return;
+                        }
+                    }
+                } catch (err) {}
+                useHtmlAudio = false;
+                startSynthFallback();
+            }
+
+            function stopMusicSafely() {
+                try {
+                    isPlaying = false;
+                    if (weddingAudioEl && !weddingAudioEl.paused) {
+                        weddingAudioEl.pause();
+                    }
+                    if (loopTimer) {
+                        clearTimeout(loopTimer);
+                        loopTimer = null;
+                    }
+                    updateMusicUI(false);
+                } catch (err) {}
+            }
+
+            // ================= 2. ENVELOPE OPENING HANDLER (RELIABLE CLICK + TOUCH) =================
+            let envelopeHasOpened = false;
+
+            window.handleOpenEnvelope = function (e) {
+                if (e && typeof e.preventDefault === 'function') {
+                    e.preventDefault();
+                }
+                if (envelopeHasOpened) return;
+                envelopeHasOpened = true;
+
+                const envelopeOverlay = document.getElementById('envelopeOverlay');
+                const musicControlBtn = document.getElementById('musicControlBtn');
+
+                // 1. Always execute visual opening immediately
+                if (envelopeOverlay) {
+                    envelopeOverlay.classList.add('opened');
+                    setTimeout(function () {
+                        envelopeOverlay.style.display = 'none';
+                    }, 1050);
+                }
+
+                // 2. Show floating music button
+                if (musicControlBtn) {
+                    musicControlBtn.classList.remove('hidden');
+                    musicControlBtn.classList.add('flex');
+                }
+
+                // 3. Safely start wedding music without blocking
+                startMusicSafely();
+            };
+
+            function initApp() {
+                const openEnvelopeBtn = document.getElementById('openEnvelopeBtn');
+                const envelopeOverlay = document.getElementById('envelopeOverlay');
+                const musicControlBtn = document.getElementById('musicControlBtn');
+
+                if (openEnvelopeBtn) {
+                    openEnvelopeBtn.addEventListener('click', window.handleOpenEnvelope);
+                    openEnvelopeBtn.addEventListener('touchend', window.handleOpenEnvelope, { passive: false });
+                }
+
+                // Allow tapping anywhere on the envelope overlay as a convenient fallback
+                if (envelopeOverlay) {
+                    envelopeOverlay.addEventListener('click', window.handleOpenEnvelope);
+                    envelopeOverlay.addEventListener('touchend', window.handleOpenEnvelope, { passive: false });
+                }
+
+                if (musicControlBtn) {
+                    musicControlBtn.addEventListener('click', function () {
+                        if (isPlaying) {
+                            stopMusicSafely();
+                        } else {
+                            startMusicSafely();
+                        }
+                    });
+                }
+
+                // ================= 3. LIVE COUNTDOWN TO DEC 12, 2026 17:00 =================
+                const targetDate = new Date('2026-12-12T17:00:00+06:00').getTime();
+                const daysEl = document.getElementById('cd-days');
+                const hoursEl = document.getElementById('cd-hours');
+                const minutesEl = document.getElementById('cd-minutes');
+                const secondsEl = document.getElementById('cd-seconds');
+
+                function updateCountdown() {
+                    const now = Date.now();
+                    const diff = Math.max(0, targetDate - now);
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                    const seconds = Math.floor((diff / 1000) % 60);
+
+                    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+                    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+                    if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+                    if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+                }
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+
+                // ================= 4. SCROLL REVEAL OBSERVER =================
+                const revealEls = document.querySelectorAll('.reveal');
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver(function (entries) {
+                        entries.forEach(function (entry) {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('visible');
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.12 });
+                    revealEls.forEach(function (el) { observer.observe(el); });
+                } else {
+                    revealEls.forEach(function (el) { el.classList.add('visible'); });
+                }
+
+                // ================= 5. MAP MODAL & CLIPBOARD COPY =================
+                const mapModal = document.getElementById('mapModal');
+                const openMapModalBtn = document.getElementById('openMapModalBtn');
+                const closeMapModalBtn = document.getElementById('closeMapModalBtn');
+                const copyAddrBtn = document.getElementById('copyAddrBtn');
+                const copyToast = document.getElementById('copyToast');
+
+                if (openMapModalBtn && mapModal) {
+                    openMapModalBtn.addEventListener('click', function () {
+                        mapModal.classList.remove('hidden');
+                        mapModal.classList.add('flex');
+                    });
+                }
+
+                if (closeMapModalBtn && mapModal) {
+                    closeMapModalBtn.addEventListener('click', function () {
+                        mapModal.classList.add('hidden');
+                        mapModal.classList.remove('flex');
+                    });
+                }
+
+                if (mapModal) {
+                    mapModal.addEventListener('click', function (e) {
+                        if (e.target === mapModal) {
+                            mapModal.classList.add('hidden');
+                            mapModal.classList.remove('flex');
+                        }
+                    });
+                }
+
+                if (copyAddrBtn) {
+                    copyAddrBtn.addEventListener('click', function () {
+                        const textToCopy = 'Учкун айылы, "Бишкек" рестораны';
+                        const tempInput = document.createElement('input');
+                        tempInput.value = textToCopy;
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+                        try {
+                            document.execCommand('copy');
+                        } catch (e) {}
+                        document.body.removeChild(tempInput);
+
+                        if (copyToast) {
+                            copyToast.classList.remove('hidden');
+                            setTimeout(function () {
+                                copyToast.classList.add('hidden');
+                            }, 2500);
+                        }
+                    });
+                }
+
+                // ================= 6. RSVP GUEST FORM =================
+                const rsvpForm = document.getElementById('rsvpForm');
+                const guestNameInput = document.getElementById('guestNameInput');
+                const rsvpErrorMsg = document.getElementById('rsvpErrorMsg');
+                const rsvpSuccessBox = document.getElementById('rsvpSuccessBox');
+                const rsvpSuccessMessage = document.getElementById('rsvpSuccessMessage');
+                const rsvpEditBtn = document.getElementById('rsvpEditBtn');
+
+                if (rsvpForm) {
+                    rsvpForm.addEventListener('submit', function (e) {
+                        e.preventDefault();
+                        const name = guestNameInput ? guestNameInput.value.trim() : '';
+                        if (!name) {
+                            if (rsvpErrorMsg) rsvpErrorMsg.classList.remove('hidden');
+                            return;
+                        }
+                        if (rsvpErrorMsg) rsvpErrorMsg.classList.add('hidden');
+
+                        const choiceInput = document.querySelector('input[name="rsvpChoice"]:checked');
+                        const choice = choiceInput ? choiceInput.value : 'yes';
+
+                        rsvpForm.classList.add('hidden');
+                        if (rsvpSuccessBox) rsvpSuccessBox.classList.remove('hidden');
+
+                        if (rsvpSuccessMessage) {
+                            if (choice === 'yes') {
+                                rsvpSuccessMessage.textContent = 'Рахмат, ' + name + '! Сизди тойдо кубануу менен күтөбүз!';
+                            } else {
+                                rsvpSuccessMessage.textContent = 'Жообуңуз кабыл алынды, ' + name + '. Жылуу каалоо-тилектериңиз үчүн ыраазычылык билдиребиз!';
+                            }
+                        }
+                    });
+                }
+
+                if (rsvpEditBtn && rsvpForm && rsvpSuccessBox) {
+                    rsvpEditBtn.addEventListener('click', function () {
+                        rsvpSuccessBox.classList.add('hidden');
+                        rsvpForm.classList.remove('hidden');
+                    });
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initApp);
+            } else {
+                initApp();
+            }
+        })();
+    </script>
+</body>
+</html>
